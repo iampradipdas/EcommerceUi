@@ -1,2 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles — Tailwind CSS v4 */
 @import "tailwindcss";
+
+/* Set Inter as the global font */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Smooth scrolling & box sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
