@@ -1,24 +1,39 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# ============================================================
+# .gitignore for EcommerceUi — Angular + TypeScript
+# ============================================================
 
-# Compiled output
+# --------------------------
+# Compiled Output
+# --------------------------
 /dist
 /tmp
 /out-tsc
 /bazel-out
+*.js.map
 
-# Node
+# --------------------------
+# Node / NPM
+# --------------------------
 /node_modules
 npm-debug.log
+npm-debug.log.*
 yarn-error.log
+yarn-error.log.*
+package-lock.json
+# Uncomment the line below if you use Yarn:
+# yarn.lock
+.pnp
+.pnp.js
 
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+# --------------------------
+# Angular Cache
+# --------------------------
+/.angular/cache
+.angular/
+
+# --------------------------
+# IDEs and Editors
+# --------------------------
 
 # Visual Studio Code
 .vscode/*
@@ -28,16 +43,65 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
+# JetBrains / WebStorm / Rider
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Eclipse
+.project
+.classpath
+.c9/
+.settings/
+*.launch
+
+# --------------------------
+# Testing & Coverage
+# --------------------------
 /coverage
-/libpeerconnection.log
+*.lcov
+/e2e/test-results
+/e2e/screenshots
+__screenshots__/
 testem.log
 /typings
-__screenshots__/
 
-# System files
+# --------------------------
+# Sass / CSS Build
+# --------------------------
+.sass-cache/
+*.css.map
+
+# --------------------------
+# Miscellaneous
+# --------------------------
+/connect.lock
+/libpeerconnection.log
+
+# --------------------------
+# Environment / Secrets
+# --------------------------
+src/environments/environment.prod.ts
+src/environments/environment.staging.ts
+.env
+.env.*
+!.env.example
+
+# --------------------------
+# OS & System Files
+# --------------------------
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --------------------------
+# Temporary Files
+# --------------------------
+*.swp
+*.swo
+*~
