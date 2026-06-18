@@ -1,0 +1,129 @@
+/* Add to styles.scss or a shared _auth.scss */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  padding: 24px 16px;
+}
+
+.auth-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+
+.auth-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #1a1a1a;
+}
+
+.auth-sub {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 24px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 6px;
+  }
+
+  input {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.15s;
+    outline: none;
+
+    &:focus       { border-color: #5c6bc0; }
+    &.is-invalid  { border-color: #e53935; }
+  }
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input { flex: 1; padding-right: 40px; }
+}
+
+.icon-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+.error-msg {
+  font-size: 11px;
+  color: #e53935;
+  margin-top: 4px;
+}
+
+.optional {
+  font-size: 11px;
+  color: #999;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #5c6bc0;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) { background: #3949ab; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.alert-error {
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  color: #c62828;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.auth-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  margin-top: 20px;
+
+  a { color: #5c6bc0; text-decoration: none; font-weight: 500; }
+}

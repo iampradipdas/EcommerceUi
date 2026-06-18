@@ -1,0 +1,75 @@
+<!-- features/auth/login/login.component.html -->
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-sub">Sign in to your account</p>
+
+    <!-- Global error message -->
+    @if (errorMessage()) {
+      <div class="alert alert-error">{{ errorMessage() }}</div>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+          [class.is-invalid]="email.invalid && email.touched"
+        />
+        @if (email.touched && email.errors) {
+          @if (email.errors['required']) {
+            <span class="error-msg">Email is required.</span>
+          } @else if (email.errors['email']) {
+            <span class="error-msg">Enter a valid email address.</span>
+          }
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-with-icon">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="••••••••"
+            [class.is-invalid]="password.invalid && password.touched"
+          />
+          <button type="button" class="icon-btn" (click)="togglePassword()">
+            {{ showPassword() ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        @if (password.touched && password.errors) {
+          @if (password.errors['required']) {
+            <span class="error-msg">Password is required.</span>
+          } @else if (password.errors['minlength']) {
+            <span class="error-msg">Password must be at least 6 characters.</span>
+          }
+        }
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="isLoading()"
+      >
+        @if (isLoading()) { Signing in... } @else { Sign In }
+      </button>
+
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account?
+      <a routerLink="/auth/register">Register here</a>
+    </p>
+
+  </div>
+</div>
