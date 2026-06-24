@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { Auth } from '../../../services/auth';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth-service';
 
 // Custom validator — checks both passwords match
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -11,14 +11,14 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 }
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-register-component',
   imports: [ReactiveFormsModule],
-  templateUrl: './register.html',
-  styleUrl: './register.css',
+  templateUrl: './register-component.html',
+  styleUrl: './register-component.css',
 })
-export class Register {
+export class RegisterComponent {
   private fb = inject(FormBuilder);
-  private auth = inject(Auth);
+  private auth = inject(AuthService);
   private router = inject(Router);
 
   isLoading = signal(false);
@@ -91,4 +91,5 @@ export class Register {
       },
     });
   }
+
 }

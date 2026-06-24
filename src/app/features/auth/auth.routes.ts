@@ -5,11 +5,11 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./login/login').then(c => c.Login)
+      import('./login-component/login-component').then(c => c.LoginComponent)
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./register/register').then(c => c.Register)
+      import('./register-component/register-component').then(c => c.RegisterComponent)
   }
 ];

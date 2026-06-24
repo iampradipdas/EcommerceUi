@@ -1,23 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { Auth } from '../../../services/auth';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/services/auth-service';
 
 @Component({
-  selector: 'app-login',
-  imports: [CommonModule,ReactiveFormsModule],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  selector: 'app-login-component',
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  templateUrl: './login-component.html',
+  styleUrl: './login-component.css',
 })
-export class Login {
+export class LoginComponent {
   private fb = inject(FormBuilder);
-  private auth = inject(Auth);
+  private auth = inject(AuthService);
   private router = inject(Router);
 
   // Signals for UI state

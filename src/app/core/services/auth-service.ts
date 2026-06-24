@@ -1,15 +1,15 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { AuthResponse, LoginDto, RegisterDto } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Auth {
-    private readonly TOKEN_KEY = 'auth_token';
+export class AuthService {
+  private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY  = 'auth_user';
   private apiUrl = environment.apiUrl;
 
