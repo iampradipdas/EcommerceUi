@@ -1,0 +1,224 @@
+<div class="product-detail-page">
+  <div class="back-link-container">
+    <a routerLink="/products" class="back-link">← Back to Products</a>
+  </div>
+
+  <div class="detail-container">
+    <!-- Product Image Gallery -->
+    <div class="image-gallery">
+      <div class="main-image-wrapper">
+        <img
+          [appLazyImage]="product().imageUrl"
+          [alt]="product().name"
+          class="main-image"
+        />
+        @if (product().isOnSale) {
+          <span class="sale-badge">{{ product().price | discount: product().discountPrice }}</span>
+        }
+      </div>
+    </div>
+
+    <!-- Product Purchase Details -->
+    <div class="product-info">
+      <p class="category-name">{{ product().categoryName }}</p>
+      <h1 class="product-name">{{ product().name }}</h1>
+
+      <!-- Ratings Summary -->
+      <div class="rating-summary-header" (click)="setTab('reviews')">
+        <div class="stars">
+          @for (star of [1,2,3,4,5]; track star) {
+            <span class="star" [class.filled]="star <= summary().averageRating">★</span>
+          }
+        </div>
+        <span class="rating-text">
+          {{ summary().averageRating }} ({{ summary().totalReviews }} {{ summary().totalReviews === 1 ? 'review' : 'reviews' }})
+        </span>
+      </div>
+
+      <!-- Price Block -->
+      <div class="price-container">
+        @if (product().isOnSale) {
+          <span class="original-price">{{ product().price | currencyInr }}</span>
+          <span class="sale-price">{{ product().finalPrice | currencyInr }}</span>
+        } @else {
+          <span class="sale-price">{{ product().price | currencyInr }}</span>
+        }
+      </div>
+
+      <p class="product-short-desc">
+        {{ product().description || 'No description available for this product.' }}
+      </p>
+
+      <!-- Purchase Controls -->
+      <div class="purchase-controls">
+        @if (product().stock > 0) {
+          <div class="qty-selector">
+            <button (click)="decrementQty()" [disabled]="quantity() <= 1" class="qty-btn">-</button>
+            <span class="qty-num">{{ quantity() }}</span>
+            <button (click)="incrementQty()" [disabled]="quantity() >= product().stock" class="qty-btn">+</button>
+          </div>
+
+          <button (click)="addToCart()" class="btn-add-to-cart">
+            Add to Cart
+          </button>
+        } @else {
+          <button disabled class="btn-out-of-stock">
+            Out of Stock
+          </button>
+        }
+      </div>
+
+      <!-- Stock status indicator -->
+      <div class="stock-status">
+        @if (product().stock === 0) {
+          <span class="status-indicator out-of-stock">❌ Out of stock</span>
+        } @else if (product().stock < 5) {
+          <span class="status-indicator low-stock">⚠️ Hurry, only {{ product().stock }} items left in stock!</span>
+        } @else {
+          <span class="status-indicator in-stock">✅ In stock ({{ product().stock }} available)</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs-wrapper">
+    <div class="tabs-header">
+      <button
+        [class.active]="activeTab() === 'description'"
+        (click)="setTab('description')"
+        class="tab-btn"
+      >
+        Description
+      </button>
+      <button
+        [class.active]="activeTab() === 'reviews'"
+        (click)="setTab('reviews')"
+        class="tab-btn"
+      >
+        Reviews ({{ summary().totalReviews }})
+      </button>
+    </div>
+
+    <!-- Description Tab Panel -->
+    @if (activeTab() === 'description') {
+      <div class="tab-panel description-panel">
+        <h3>Product Details</h3>
+        <p>{{ product().description || 'No detailed description available.' }}</p>
+      </div>
+    }
+
+    <!-- Reviews Tab Panel -->
+    @if (activeTab() === 'reviews') {
+      <div class="tab-panel reviews-panel">
+        <div class="reviews-layout">
+          
+          <!-- Left side: Review Stats breakdown -->
+          <div class="reviews-summary-box">
+            <h3 class="box-title">Customer Ratings</h3>
+            <div class="avg-box">
+              <span class="avg-num">{{ summary().averageRating }}</span>
+              <div class="stars">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <span class="star" [class.filled]="star <= summary().averageRating">★</span>
+                }
+              </div>
+              <span class="total-text">Based on {{ summary().totalReviews }} ratings</span>
+            </div>
+
+            <!-- Stars breakdown -->
+            <div class="breakdown-list">
+              @for (row of summary().breakdown; track row.stars) {
+                <div class="breakdown-row">
+                  <span class="row-star-num">{{ row.stars }} star</span>
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" [style.width.%]="row.percent"></div>
+                  </div>
+                  <span class="row-count">{{ row.count }}</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Right side: Reviews List and Submission -->
+          <div class="reviews-list-container">
+            <!-- Review submission form -->
+            <div class="review-form-box">
+              <h4>Write a Customer Review</h4>
+              @if (auth.isLoggedIn()) {
+                <form [formGroup]="reviewForm" (ngSubmit)="onSubmitReview()" class="review-form">
+                  <div class="form-group">
+                    <label>Rating</label>
+                    <div class="rating-select">
+                      <select formControlName="rating">
+                        <option [ngValue]="5">5 Stars — Excellent</option>
+                        <option [ngValue]="4">4 Stars — Very Good</option>
+                        <option [ngValue]="3">3 Stars — Average</option>
+                        <option [ngValue]="2">2 Stars — Poor</option>
+                        <option [ngValue]="1">1 Star — Terrible</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="comment">Comment</label>
+                    <textarea
+                      id="comment"
+                      rows="4"
+                      placeholder="Share your thoughts about this product..."
+                      formControlName="comment"
+                    ></textarea>
+                    @if (comment.touched && comment.errors?.['required']) {
+                      <span class="error-msg">Review comment is required.</span>
+                    }
+                    @if (comment.touched && comment.errors?.['minlength']) {
+                      <span class="error-msg">Review comment must be at least 5 characters long.</span>
+                    }
+                  </div>
+
+                  <button
+                    type="submit"
+                    [disabled]="reviewForm.invalid || isSubmittingReview()"
+                    class="btn-submit-review"
+                  >
+                    {{ isSubmittingReview() ? 'Submitting...' : 'Submit Review' }}
+                  </button>
+                </form>
+              } @else {
+                <div class="login-prompt">
+                  <p>You must be logged in to write a review.</p>
+                  <a routerLink="/auth/login" [queryParams]="{ returnUrl: '/products/' + product().productId }" class="btn-prompt-login">Login to Review</a>
+                </div>
+              }
+            </div>
+
+            <!-- Reviews list -->
+            <div class="reviews-list">
+              <h4>Customer Comments ({{ reviews().length }})</h4>
+              @if (reviews().length === 0) {
+                <p class="no-reviews">No reviews yet. Be the first to review this product!</p>
+              } @else {
+                @for (review of reviews(); track review.reviewId) {
+                  <div class="review-item">
+                    <div class="review-meta">
+                      <span class="reviewer-name">{{ review.userName }}</span>
+                      <span class="review-date">{{ review.createdAt | timeAgo }}</span>
+                    </div>
+                    <div class="review-rating-stars">
+                      @for (star of [1,2,3,4,5]; track star) {
+                        <span class="star" [class.filled]="star <= review.rating">★</span>
+                      }
+                    </div>
+                    <p class="review-comment">{{ review.comment }}</p>
+                  </div>
+                }
+              }
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    }
+  </div>
+</div>

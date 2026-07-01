@@ -1,0 +1,47 @@
+<!-- features/products/product-card/product-card.component.html -->
+<a [routerLink]="['/products', product.productId]" class="product-card">
+
+  <div class="card-image">
+    <img
+      [appLazyImage]="product.imageUrl"
+      [alt]="product.name"
+    />
+
+    @if (product.isOnSale) {
+      <span class="badge-sale">{{ product.price | discount: product.discountPrice }}</span>
+    }
+
+    <button class="btn-wishlist" (click)="onToggleWishlist($event)">
+      ♡
+    </button>
+  </div>
+
+  <div class="card-body">
+    <p class="card-category">{{ product.categoryName }}</p>
+    <h3 class="card-title">{{ product.name }}</h3>
+
+    <div class="card-price">
+      @if (product.isOnSale) {
+        <span class="price-original">{{ product.price | currencyInr }}</span>
+        <span class="price-final">{{ product.finalPrice | currencyInr }}</span>
+      } @else {
+        <span class="price-final">{{ product.price | currencyInr }}</span>
+      }
+    </div>
+
+    @if (product.stock === 0) {
+      <p class="stock-out">Out of stock</p>
+    } @else if (product.stock < 5) {
+      <p class="stock-low">Only {{ product.stock }} left!</p>
+    }
+  </div>
+
+  <button
+    class="btn-add-cart"
+    [disabled]="product.stock === 0"
+    (click)="onAddToCart($event)"
+  >
+    {{ product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
+  </button>
+
+</a>

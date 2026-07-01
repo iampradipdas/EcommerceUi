@@ -1,0 +1,150 @@
+<!-- features/products/product-list/product-list.component.html -->
+<div class="products-page">
+
+  <!-- ─── Filter Sidebar ─────────────────────────────────────────────── -->
+  <aside class="filters-sidebar">
+    <h3>Filters</h3>
+
+    <div class="filter-group">
+      <label>Search</label>
+      <input
+        type="text"
+        placeholder="Search products..."
+        [value]="searchTerm()"
+        (input)="onSearchInput($any($event.target).value)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Category</label>
+      <select
+        [ngModel]="categoryId()"
+        (ngModelChange)="onCategoryChange($event)"
+      >
+        <option [ngValue]="null">All Categories</option>
+        <option [ngValue]="1">Electronics</option>
+        <option [ngValue]="2">Clothing</option>
+        <option [ngValue]="3">Books</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Price Range</label>
+      <div class="price-inputs">
+        <input
+          type="number"
+          placeholder="Min"
+          [ngModel]="minPrice()"
+          (ngModelChange)="minPrice.set($event)"
+          (blur)="onPriceRangeChange()"
+        />
+        <span>—</span>
+        <input
+          type="number"
+          placeholder="Max"
+          [ngModel]="maxPrice()"
+          (ngModelChange)="maxPrice.set($event)"
+          (blur)="onPriceRangeChange()"
+        />
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label class="checkbox-label">
+        <input
+          type="checkbox"
+          [checked]="onSaleOnly()"
+          (change)="toggleOnSale()"
+        />
+        On Sale Only
+      </label>
+    </div>
+
+    @if (hasActiveFilters()) {
+      <button class="btn-clear" (click)="clearFilters()">
+        Clear All Filters
+      </button>
+    }
+  </aside>
+
+  <!-- ─── Main Content ───────────────────────────────────────────────── -->
+  <main class="products-main">
+
+    <!-- Toolbar -->
+    <div class="products-toolbar">
+      <p class="results-count">
+        @if (totalCount() > 0) {
+          Showing {{ showingFrom() }}–{{ showingTo() }} of {{ totalCount() }} products
+        } @else if (!isLoading()) {
+          No products found
+        }
+      </p>
+
+      <select (change)="onSortChange($any($event.target).value)">
+        <option value="createdAt-desc">Newest First</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="name-asc">Name: A to Z</option>
+      </select>
+    </div>
+
+    <!-- Loading skeleton -->
+    @if (isLoading()) {
+      <div class="products-grid">
+        @for (i of [1,2,3,4,5,6,7,8]; track i) {
+          <div class="skeleton-card"></div>
+        }
+      </div>
+    }
+
+    <!-- Product Grid -->
+    @if (!isLoading() && products().length > 0) {
+      <div class="products-grid">
+        @for (product of products(); track product.productId) {
+          <app-product-card
+            [product]="product"
+            (addToCart)="onAddToCart($event)"
+            (toggleWishlist)="onToggleWishlist($event)"
+          />
+        }
+      </div>
+    }
+
+    <!-- Empty state -->
+    @if (!isLoading() && products().length === 0) {
+      <div class="empty-state">
+        <p>No products match your filters.</p>
+        <button (click)="clearFilters()">Clear filters</button>
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)"
+        >
+          Previous
+        </button>
+
+        @for (page of [].constructor(totalPages()); track $index) {
+          <button
+            [class.active]="currentPage() === $index + 1"
+            (click)="goToPage($index + 1)"
+          >
+            {{ $index + 1 }}
+          </button>
+        }
+
+        <button
+          [disabled]="currentPage() === totalPages()"
+          (click)="goToPage(currentPage() + 1)"
+        >
+          Next
+        </button>
+      </div>
+    }
+
+  </main>
+</div>

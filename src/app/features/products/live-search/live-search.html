@@ -1,0 +1,59 @@
+<!-- features/products/live-search/live-search.component.html -->
+<div class="search-wrapper">
+
+  <div class="search-input-box">
+    <span class="search-icon">🔍</span>
+
+    <input
+      type="text"
+      placeholder="Search products..."
+      [value]="searchTerm()"
+      (input)="onInputChange($any($event.target).value)"
+      (focus)="openDropdown()"
+      (blur)="closeDropdown()"
+    />
+
+    @if (searchTerm()) {
+      <button class="btn-clear" (click)="clearSearch()">✕</button>
+    }
+  </div>
+
+  @if (isOpen()) {
+    <div class="search-dropdown">
+
+      @if (isLoading()) {
+        <div class="search-loading">
+          <span class="spinner-sm"></span> Searching...
+        </div>
+      }
+
+      @if (!isLoading() && results().length > 0) {
+        <ul class="search-results">
+          @for (product of results(); track product.productId) {
+            <li>
+              <a [routerLink]="['/products', product.productId]" class="search-result-item">
+                <img [src]="product.imageUrl" [alt]="product.name" />
+                <div class="result-info">
+                  <p class="result-name">{{ product.name }}</p>
+                  <p class="result-price">₹{{ product.finalPrice }}</p>
+                </div>
+              </a>
+            </li>
+          }
+        </ul>
+
+        <a [routerLink]="['/products']" [queryParams]="{ search: searchTerm() }" class="view-all">
+          View all results for "{{ searchTerm() }}"
+        </a>
+      }
+
+      @if (!isLoading() && hasSearched() && results().length === 0) {
+        <div class="search-empty">
+          No products found for "{{ searchTerm() }}"
+        </div>
+      }
+
+    </div>
+  }
+
+</div>

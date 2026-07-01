@@ -1,0 +1,45 @@
+<header class="header">
+  <div class="header-container">
+    <!-- Logo -->
+    <a routerLink="/products" class="logo">
+      <span class="logo-icon">🛒</span>
+      <span class="logo-text">MegaShop</span>
+    </a>
+
+    <!-- Live Search -->
+    <div class="search-wrapper">
+      <app-live-search />
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-links">
+      <a routerLink="/products" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Products</a>
+      
+      <!-- Cart Icon -->
+      <a routerLink="/products" class="cart-btn">
+        <span class="cart-icon">🛍️</span>
+        @if (auth.cartCount() > 0) {
+          <span class="cart-badge">{{ auth.cartCount() }}</span>
+        }
+      </a>
+
+      <span class="divider"></span>
+
+      <!-- Auth State -->
+      @if (auth.isLoggedIn()) {
+        <div class="user-info">
+          <span class="welcome-text">Hi, <strong>{{ auth.userFullName() }}</strong></span>
+          @if (auth.isAdmin()) {
+            <span class="admin-badge">Admin</span>
+          }
+          <button (click)="logout()" class="btn-logout">Logout</button>
+        </div>
+      } @else {
+        <div class="auth-buttons">
+          <a routerLink="/auth/login" class="btn-login">Login</a>
+          <a routerLink="/auth/register" class="btn-register">Register</a>
+        </div>
+      }
+    </nav>
+  </div>
+</header>
