@@ -8,7 +8,7 @@
     <div class="image-gallery">
       <div class="main-image-wrapper">
         <img
-          [appLazyImage]="product().imageUrl"
+          [appLazyImage]="product().imageUrl | productImage"
           [alt]="product().name"
           class="main-image"
         />

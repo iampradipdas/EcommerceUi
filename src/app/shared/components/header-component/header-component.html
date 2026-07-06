@@ -17,6 +17,7 @@
       @if (auth.isLoggedIn()) {
         <a routerLink="/orders" routerLinkActive="active" class="nav-link">Orders</a>
       }
+      <a *appHasRole="'Admin'" routerLink="/admin" routerLinkActive="active" class="nav-link admin-nav-link">Admin Panel</a>
       
       <!-- Cart Icon -->
       <a routerLink="/cart" class="cart-btn">

@@ -1,0 +1,155 @@
+<div class="admin-layout">
+  <!-- Admin Sidebar Navigation -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <span class="logo-icon">🛠️</span>
+      <span class="logo-text">MegaShop Admin</span>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📦</span>
+        <span>Manage Products</span>
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📋</span>
+        <span>Manage Orders</span>
+      </a>
+      <div class="sidebar-spacer"></div>
+      <a routerLink="/products" class="nav-item exit-item">
+        <span class="nav-icon">🏠</span>
+        <span>Back to Store</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Admin Main Content Area -->
+  <main class="admin-content">
+    <div class="content-header">
+      <h2>Dashboard Overview</h2>
+      <p class="subtitle">Real-time store metrics and listings</p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="admin-loader">
+        <span class="spinner"></span>
+        <p>Calculating storefront metrics...</p>
+      </div>
+    } @else if (errorMsg()) {
+      <div class="admin-error-box">
+        <p>{{ errorMsg() }}</p>
+      </div>
+    } @else {
+      <!-- Dashboard Statistics Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card card-revenue">
+          <div class="card-left">
+            <span class="card-title">Total Revenue</span>
+            <span class="card-value">{{ totalRevenue() | currencyInr }}</span>
+          </div>
+          <span class="card-icon">💰</span>
+        </div>
+
+        <div class="metric-card card-orders">
+          <div class="card-left">
+            <span class="card-title">Total Orders</span>
+            <span class="card-value">{{ totalOrders() }}</span>
+          </div>
+          <span class="card-icon">📋</span>
+        </div>
+
+        <div class="metric-card card-products">
+          <div class="card-left">
+            <span class="card-title">Active Products</span>
+            <span class="card-value">{{ totalProducts() }}</span>
+          </div>
+          <span class="card-icon">📦</span>
+        </div>
+
+        <div class="metric-card card-stock" [class.warning]="lowStockCount() > 0">
+          <div class="card-left">
+            <span class="card-title">Low Stock Items</span>
+            <span class="card-value">{{ lowStockCount() }}</span>
+          </div>
+          <span class="card-icon">⚠️</span>
+        </div>
+      </div>
+
+      <!-- Dashboard Split Sections -->
+      <div class="dashboard-split">
+        <!-- Recent Orders -->
+        <div class="dashboard-section recent-orders-box">
+          <h3>Recent Orders</h3>
+          @if (recentOrders().length === 0) {
+            <p class="no-data-msg">No orders placed in the system yet.</p>
+          } @else {
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (order of recentOrders(); track order.orderId) {
+                    <tr>
+                      <td class="font-bold">#{{ order.orderId }}</td>
+                      <td>
+                        <div class="customer-info">
+                          <span class="name">{{ order.userName }}</span>
+                          <span class="email">{{ order.userEmail }}</span>
+                        </div>
+                      </td>
+                      <td>{{ order.orderDate | date:'shortDate' }}</td>
+                      <td class="font-bold">{{ order.totalAmount | currencyInr }}</td>
+                      <td>
+                        <span class="status-badge" [class]="order.status.toLowerCase()">
+                          {{ order.status }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+
+        <!-- Low Stock Alert -->
+        <div class="dashboard-section low-stock-box">
+          <h3>Low Stock Warnings</h3>
+          @if (lowStockProducts().length === 0) {
+            <div class="healthy-stock-state">
+              <span class="healthy-icon">✅</span>
+              <p>All active products have healthy stock levels (> 5 units).</p>
+            </div>
+          } @else {
+            <div class="low-stock-list">
+              @for (prod of lowStockProducts(); track prod.productId) {
+                <div class="low-stock-row">
+                  <img [src]="prod.imageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=60'" [alt]="prod.name" class="low-stock-img" />
+                  <div class="low-stock-info">
+                    <span class="name">{{ prod.name }}</span>
+                    <span class="slug">SKU/Slug: {{ prod.slug }}</span>
+                  </div>
+                  <div class="low-stock-badge">
+                    <span class="stock-num">{{ prod.stock }}</span>
+                    <span class="label">left</span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </main>
+</div>

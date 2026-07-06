@@ -1,0 +1,206 @@
+<div class="admin-layout">
+  <!-- Admin Sidebar Navigation -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <span class="logo-icon">🛠️</span>
+      <span class="logo-text">MegaShop Admin</span>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📦</span>
+        <span>Manage Products</span>
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📋</span>
+        <span>Manage Orders</span>
+      </a>
+      <div class="sidebar-spacer"></div>
+      <a routerLink="/products" class="nav-item exit-item">
+        <span class="nav-icon">🏠</span>
+        <span>Back to Store</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Admin Main Content Area -->
+  <main class="admin-content">
+    <div class="content-header-row">
+      <div>
+        <h2>Manage Products</h2>
+        <p class="subtitle">Add, edit, soft-delete or restore catalog products</p>
+      </div>
+      <button (click)="openAddModal()" class="btn-add-product">+ Add Product</button>
+    </div>
+
+    @if (isLoading()) {
+      <div class="admin-loader">
+        <span class="spinner"></span>
+        <p>Loading products list...</p>
+      </div>
+    } @else {
+      <!-- Catalog Management Table -->
+      <div class="dashboard-section table-section">
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Base Price</th>
+                <th>Sale Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (prod of products(); track prod.productId) {
+                <tr [class.inactive-row]="!prod.isActive">
+                  <td>
+                    <img [src]="prod.imageUrl | productImage" [alt]="prod.name" class="table-prod-img" />
+                  </td>
+                  <td>
+                    <span class="table-prod-name">{{ prod.name }}</span>
+                    <span class="table-prod-slug">{{ prod.slug }}</span>
+                  </td>
+                  <td>{{ getCategoryName(prod.categoryId) }}</td>
+                  <td>{{ prod.price | currencyInr }}</td>
+                  <td>
+                    @if (prod.discountPrice) {
+                      <span class="sale-badge">{{ prod.discountPrice | currencyInr }}</span>
+                    } @else {
+                      <span class="no-sale">-</span>
+                    }
+                  </td>
+                  <td>
+                    <span class="stock-badge" [class.low-stock]="prod.stock < 5">
+                      {{ prod.stock }} units
+                    </span>
+                  </td>
+                  <td>
+                    @if (prod.isActive) {
+                      <span class="badge badge-active">Active</span>
+                    } @else {
+                      <span class="badge badge-inactive">Deleted</span>
+                    }
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <button (click)="openEditModal(prod)" class="btn-action-edit" title="Edit Product">✏️</button>
+                      @if (prod.isActive) {
+                        <button (click)="deleteProduct(prod.productId)" class="btn-action-delete" title="Soft Delete">🗑️</button>
+                      } @else {
+                        <button (click)="restoreProduct(prod.productId)" class="btn-action-restore" title="Restore Product">🔄</button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </main>
+</div>
+
+<!-- Add/Edit Product Modal Overlay -->
+@if (isModalOpen()) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>{{ isEditMode() ? 'Edit Product' : 'Add New Product' }}</h3>
+        <button (click)="closeModal()" class="btn-close">&times;</button>
+      </div>
+
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="modal-form">
+        
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="name">Product Name *</label>
+            <input id="name" type="text" formControlName="name" placeholder="e.g. iPhone 16 Pro" />
+            @if (productForm.get('name')?.touched && productForm.get('name')?.invalid) {
+              <span class="error-msg">Product name is required (max 200 characters).</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="categoryId">Category *</label>
+            <select id="categoryId" formControlName="categoryId">
+              @for (cat of categories; track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="stock">Stock Quantity *</label>
+            <input id="stock" type="number" formControlName="stock" placeholder="e.g. 50" />
+            @if (productForm.get('stock')?.touched && productForm.get('stock')?.invalid) {
+              <span class="error-msg">Stock is required and cannot be negative.</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="price">Base Price *</label>
+            <input id="price" type="number" formControlName="price" placeholder="e.g. 79999" />
+            @if (productForm.get('price')?.touched && productForm.get('price')?.invalid) {
+              <span class="error-msg">Price must be greater than 0.</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="discountPrice">Discount/Sale Price (Optional)</label>
+            <input id="discountPrice" type="number" formControlName="discountPrice" placeholder="e.g. 74999" />
+            @if (productForm.get('discountPrice')?.touched && productForm.get('discountPrice')?.invalid) {
+              <span class="error-msg">Discount price must be greater than 0.</span>
+            }
+          </div>
+
+          <div class="form-group full-width">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" rows="3" placeholder="Enter detailed product description..."></textarea>
+          </div>
+
+          <!-- File Upload and Preview Section -->
+          <div class="form-group full-width upload-section">
+            <label>Product Image</label>
+            <div class="file-uploader">
+              <input type="file" (change)="onFileSelected($event)" id="fileInput" accept="image/*" class="file-input-hidden" />
+              <label for="fileInput" class="file-dropzone">
+                @if (isUploading()) {
+                  <span class="upload-spinner"></span>
+                  <span>Uploading image to server...</span>
+                } @else {
+                  <span>📂 Click to select image file</span>
+                  <span class="hint">Accepts JPG, PNG, GIF up to 5MB</span>
+                }
+              </label>
+            </div>
+
+            @if (uploadedImageUrl()) {
+              <div class="image-preview-box">
+                <img [src]="uploadedImageUrl() | productImage" alt="Uploaded preview" />
+                <span class="uploaded-path">Path: {{ uploadedImageUrl() }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" (click)="closeModal()" class="btn-cancel">Cancel</button>
+          <button type="submit" [disabled]="productForm.invalid || isUploading()" class="btn-save">
+            Save Product
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+}

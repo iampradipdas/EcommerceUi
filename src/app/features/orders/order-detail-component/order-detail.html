@@ -31,7 +31,7 @@
         <div class="order-items-grid">
           @for (item of orderDetails.orderItems; track item.orderItemId) {
             <div class="item-detail-row">
-              <img [src]="item.productImageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=150'" [alt]="item.productName" />
+              <img [src]="item.productImageUrl | productImage" [alt]="item.productName" />
               
               <div class="item-info">
                 <a [routerLink]="['/products', item.productId]" class="name">{{ item.productName }}</a>

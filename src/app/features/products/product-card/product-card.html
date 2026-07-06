@@ -3,7 +3,7 @@
 
   <div class="card-image">
     <img
-      [appLazyImage]="product.imageUrl"
+      [appLazyImage]="product.imageUrl | productImage"
       [alt]="product.name"
     />
 

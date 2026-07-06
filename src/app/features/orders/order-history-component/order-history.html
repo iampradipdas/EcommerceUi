@@ -46,7 +46,7 @@
             <div class="items-preview">
               @for (item of order.orderItems.slice(0, 3); track item.orderItemId) {
                 <div class="item-preview-row">
-                  <img [src]="item.productImageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=60'" [alt]="item.productName" />
+                  <img [src]="item.productImageUrl | productImage" [alt]="item.productName" />
                   <div class="item-info">
                     <span class="name">{{ item.productName }}</span>
                     <span class="qty">Qty: {{ item.quantity }}</span>

@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Order, OrdersService } from '../../../core/services/orders-service';
 import { CurrencyInrPipe } from '../../../shared/pipes/currency-inr.pipe';
+import { ProductImagePipe } from '../../../shared/pipes/product-image.pipe';
 
 @Component({
   selector: 'app-order-history',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, CurrencyInrPipe],
+  imports: [CommonModule, RouterLink, CurrencyInrPipe, ProductImagePipe],
   templateUrl: './order-history.html',
   styleUrl: './order-history.css',
 })

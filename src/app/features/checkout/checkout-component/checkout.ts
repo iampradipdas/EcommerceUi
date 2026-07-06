@@ -60,11 +60,13 @@ export function expiryDateValidator(control: AbstractControl): ValidationErrors 
   return null;
 }
 
+import { ProductImagePipe } from '../../../shared/pipes/product-image.pipe';
+
 @Component({
   selector: 'app-checkout',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, CurrencyInrPipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, CurrencyInrPipe, ProductImagePipe],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })

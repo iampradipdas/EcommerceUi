@@ -20,7 +20,7 @@
         <div class="items-list">
           @for (item of cartService.items(); track item.cartItemId) {
             <div class="cart-item-row">
-              <img [src]="item.imageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=150'" [alt]="item.name" class="item-img" />
+              <img [src]="item.imageUrl | productImage" [alt]="item.name" class="item-img" />
               
               <div class="item-details">
                 <a [routerLink]="['/products', item.productId]" class="item-name">{{ item.name }}</a>

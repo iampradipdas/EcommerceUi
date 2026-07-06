@@ -1,0 +1,186 @@
+<div class="admin-layout">
+  <!-- Admin Sidebar Navigation -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <span class="logo-icon">🛠️</span>
+      <span class="logo-text">MegaShop Admin</span>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📦</span>
+        <span>Manage Products</span>
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📋</span>
+        <span>Manage Orders</span>
+      </a>
+      <div class="sidebar-spacer"></div>
+      <a routerLink="/products" class="nav-item exit-item">
+        <span class="nav-icon">🏠</span>
+        <span>Back to Store</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Admin Main Content Area -->
+  <main class="admin-content">
+    <div class="content-header">
+      <h2>Manage Orders</h2>
+      <p class="subtitle">Track sales, update dispatch statuses, and inspect receipts</p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="admin-loader">
+        <span class="spinner"></span>
+        <p>Loading sales records...</p>
+      </div>
+    } @else {
+      <!-- Sales Orders Table -->
+      <div class="dashboard-section table-section">
+        @if (orders().length === 0) {
+          <p class="no-data-msg">No customer orders have been placed yet.</p>
+        } @else {
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Order Date</th>
+                  <th>Total Price</th>
+                  <th>Item Count</th>
+                  <th>Status Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of orders(); track order.orderId) {
+                  <tr>
+                    <td class="font-bold">#{{ order.orderId }}</td>
+                    <td>
+                      <div class="customer-info">
+                        <span class="name">{{ order.userName }}</span>
+                        <span class="email">{{ order.userEmail }}</span>
+                      </div>
+                    </td>
+                    <td>{{ order.orderDate | date:'mediumDate' }}</td>
+                    <td class="font-bold price-text">{{ order.totalAmount | currencyInr }}</td>
+                    <td>{{ order.itemCount }} items</td>
+                    <td>
+                      <select
+                        [value]="order.status"
+                        (change)="onStatusChange(order.orderId, $any($event.target).value)"
+                        class="status-dropdown"
+                        [class]="order.status.toLowerCase()"
+                      >
+                        @for (opt of statusOptions; track opt) {
+                          <option [value]="opt">{{ opt }}</option>
+                        }
+                      </select>
+                    </td>
+                    <td>
+                      <button (click)="openDetailsModal(order)" class="btn-action-view" title="Inspect Order Details">
+                        🔍 Inspect
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>
+
+<!-- Order Inspection Details Modal -->
+@if (isModalOpen()) {
+  <div class="modal-overlay">
+    @if (selectedOrder(); as ord) {
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Inspect Order #{{ ord.orderId }}</h3>
+          <button (click)="closeModal()" class="btn-close">&times;</button>
+        </div>
+
+      <div class="modal-body">
+        <!-- Metadata summary -->
+        <div class="order-meta-box">
+          <div class="meta-col">
+            <span class="lbl">Customer Info</span>
+            <span class="val font-bold">{{ ord.userName }}</span>
+            <span class="subval">{{ ord.userEmail }}</span>
+          </div>
+          <div class="meta-col">
+            <span class="lbl">Date Placed</span>
+            <span class="val">{{ ord.orderDate | date:'medium' }}</span>
+          </div>
+          <div class="meta-col">
+            <span class="lbl">Current Status</span>
+            <span class="status-badge" [class]="ord.status.toLowerCase()">{{ ord.status }}</span>
+          </div>
+        </div>
+
+        <!-- Shipping Destination -->
+        <div class="shipping-address-box">
+          <h4>Shipping Destination</h4>
+          <p class="address-text">{{ ord.shippingAddress }}</p>
+        </div>
+
+        <!-- Ordered items grid -->
+        <div class="items-list-box">
+          <h4>Items Purchased ({{ ord.itemCount }})</h4>
+          <div class="items-table-wrapper">
+            <table class="modal-items-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th class="text-right">Price</th>
+                  <th class="text-center">Qty</th>
+                  <th class="text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of ord.items; track item.orderItemId) {
+                  <tr>
+                    <td class="font-bold">{{ item.productName }}</td>
+                    <td class="text-right">{{ item.unitPrice | currencyInr }}</td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-right font-bold">{{ item.subtotal | currencyInr }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="order-total-summary">
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span>{{ ord.totalAmount | currencyInr }}</span>
+          </div>
+          <div class="summary-line">
+            <span>Shipping Cost</span>
+            <span class="free">FREE</span>
+          </div>
+          <div class="divider"></div>
+          <div class="summary-line grand-total-line">
+            <span>Total Paid</span>
+            <span>{{ ord.totalAmount | currencyInr }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button (click)="closeModal()" class="btn-close-modal">Close</button>
+      </div>
+    </div>
+    }
+  </div>
+}

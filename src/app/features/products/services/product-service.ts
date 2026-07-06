@@ -60,4 +60,26 @@ export class ProductService {
       params: { categoryId: categoryId.toString() },
     });
   }
+
+  createProduct(dto: any): Observable<Product> {
+    return this.http.post<Product>(this.apiUrl, dto);
+  }
+
+  updateProduct(id: number, dto: any): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, dto);
+  }
+
+  deleteProduct(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
+  }
+
+  restoreProduct(id: number): Observable<{ message: string }> {
+    return this.http.patch<{ message: string }>(`${this.apiUrl}/${id}/restore`, {});
+  }
+
+  uploadImageFile(file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file, file.name); // 'file' matches the IFormFile parameter in C# UploadsController
+    return this.http.post<{ imageUrl: string }>(`${environment.apiUrl}/uploads/product-image`, formData);
+  }
 }

@@ -6,6 +6,7 @@ import { CurrencyInrPipe } from '../../../shared/pipes/currency-inr.pipe';
 import { DiscountPipe } from '../../../shared/pipes/discount.pipe';
 import { TimeAgoPipe } from '../../../shared/pipes/time-ago.pipe';
 import { LazyImageDirective } from '../../../shared/directives/lazy-image.directive';
+import { ProductImagePipe } from '../../../shared/pipes/product-image.pipe';
 import { AuthService } from '../../../core/services/auth-service';
 import { CartService } from '../../../core/services/cart-service';
 import { ReviewService } from '../services/review-service';
@@ -24,6 +25,7 @@ import { ToastService } from '../../../core/services/toast-service';
     TimeAgoPipe,
     LazyImageDirective,
     ReactiveFormsModule,
+    ProductImagePipe
   ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css',

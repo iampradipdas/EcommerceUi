@@ -5,6 +5,7 @@ import { Product } from '../../../core/models/product';
 import { DiscountPipe } from '../../../shared/pipes/discount.pipe';
 import { CurrencyInrPipe } from '../../../shared/pipes/currency-inr.pipe';
 import { LazyImageDirective } from '../../../shared/directives/lazy-image.directive';
+import { ProductImagePipe } from '../../../shared/pipes/product-image.pipe';
 
 @Component({
   selector: 'app-product-card',
@@ -13,7 +14,8 @@ import { LazyImageDirective } from '../../../shared/directives/lazy-image.direct
     RouterLink,
     DiscountPipe,
     CurrencyInrPipe,
-    LazyImageDirective
+    LazyImageDirective,
+    ProductImagePipe
   ],
   templateUrl: './product-card.html',
   styleUrl: './product-card.css',

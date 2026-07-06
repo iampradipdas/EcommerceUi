@@ -4,12 +4,13 @@ import { RouterLink } from '@angular/router';
 import { CartService } from '../../../core/services/cart-service';
 import { CurrencyInrPipe } from '../../../shared/pipes/currency-inr.pipe';
 import { AuthService } from '../../../core/services/auth-service';
+import { ProductImagePipe } from '../../../shared/pipes/product-image.pipe';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, CurrencyInrPipe],
+  imports: [CommonModule, RouterLink, CurrencyInrPipe, ProductImagePipe],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })

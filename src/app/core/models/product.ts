@@ -10,6 +10,7 @@ export interface Product {
   imageUrl:      string | null;
   isActive:      boolean;
   createdAt:     string;
+  categoryId:    number;
   categoryName:  string;
   finalPrice:    number;
   isOnSale:      boolean;
