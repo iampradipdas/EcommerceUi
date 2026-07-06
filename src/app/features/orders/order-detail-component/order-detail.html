@@ -1,0 +1,91 @@
+<div class="order-detail-page">
+  <div class="back-link-container">
+    <a routerLink="/orders" class="back-link">← Back to Order History</a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <span class="spinner"></span>
+      <p>Loading order details...</p>
+    </div>
+  } @else if (errorMsg()) {
+    <div class="error-state">
+      <p>{{ errorMsg() }}</p>
+    </div>
+  } @else if (order(); as orderDetails) {
+    <div class="detail-header-block">
+      <div>
+        <h1 class="page-title">Order Details</h1>
+        <p class="order-meta-desc">Placed on {{ orderDetails.orderDate | date:'longDate' }} at {{ orderDetails.orderDate | date:'mediumTime' }}</p>
+      </div>
+      <div class="order-id-status">
+        <span class="order-id">Order ID: #{{ orderDetails.orderId }}</span>
+        <span class="status-badge" [class]="orderDetails.status.toLowerCase()">{{ orderDetails.status }}</span>
+      </div>
+    </div>
+
+    <div class="detail-layout">
+      <!-- Left side: items list -->
+      <div class="items-list-box">
+        <h3>Items In This Order</h3>
+        <div class="order-items-grid">
+          @for (item of orderDetails.orderItems; track item.orderItemId) {
+            <div class="item-detail-row">
+              <img [src]="item.productImageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=150'" [alt]="item.productName" />
+              
+              <div class="item-info">
+                <a [routerLink]="['/products', item.productId]" class="name">{{ item.productName }}</a>
+                <span class="price-each">{{ item.unitPrice | currencyInr }} each</span>
+              </div>
+
+              <div class="item-qty">
+                <span class="label">Quantity</span>
+                <span class="val">{{ item.quantity }}</span>
+              </div>
+
+              <div class="item-subtotal">
+                {{ item.subtotal | currencyInr }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right side: Shipping and summary details -->
+      <div class="sidebar-box">
+        <!-- Shipping Address Details -->
+        <div class="shipping-info-block">
+          <h4>Shipping Address</h4>
+          <p class="address-text">{{ orderDetails.shippingAddress }}</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Cost totals -->
+        <div class="totals-block">
+          <h4>Payment Summary</h4>
+          <div class="total-row">
+            <span>Subtotal</span>
+            <span>{{ orderDetails.totalAmount | currencyInr }}</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping</span>
+            <span class="free">FREE</span>
+          </div>
+          <div class="divider"></div>
+          <div class="total-row grand-total">
+            <span>Total Paid</span>
+            <span>{{ orderDetails.totalAmount | currencyInr }}</span>
+          </div>
+        </div>
+
+        <div class="payment-method-block">
+          <h4>Payment Method</h4>
+          <p>💳 Credit Card (Ending in **1111)</p>
+        </div>
+
+        <a routerLink="/products" class="btn-shop-more">Continue Shopping</a>
+      </div>
+    </div>
+  }
+</div>

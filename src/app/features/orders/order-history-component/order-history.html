@@ -1,0 +1,70 @@
+<div class="order-history-page">
+  <h1 class="page-title">Order History</h1>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <span class="spinner"></span>
+      <p>Loading your order history...</p>
+    </div>
+  } @else if (errorMsg()) {
+    <div class="error-state">
+      <p>{{ errorMsg() }}</p>
+    </div>
+  } @else if (orders().length === 0) {
+    <div class="empty-orders">
+      <span class="empty-icon">📦</span>
+      <h3>No orders placed yet</h3>
+      <p>Once you place an order, you will see it listed here with details and tracking status.</p>
+      <a routerLink="/products" class="btn-shop">Shop Products Now</a>
+    </div>
+  } @else {
+    <div class="orders-list">
+      @for (order of orders(); track order.orderId) {
+        <div class="order-card">
+          <!-- Card Header Info -->
+          <div class="order-card-header">
+            <div class="header-group">
+              <span class="label">Order Placed</span>
+              <span class="value">{{ order.orderDate | date:'mediumDate' }}</span>
+            </div>
+            <div class="header-group">
+              <span class="label">Total Amount</span>
+              <span class="value price">{{ order.totalAmount | currencyInr }}</span>
+            </div>
+            <div class="header-group">
+              <span class="label">Status</span>
+              <span class="status-badge" [class]="order.status.toLowerCase()">{{ order.status }}</span>
+            </div>
+            <div class="header-group order-id-group">
+              <span class="label">Order ID</span>
+              <span class="value">#{{ order.orderId }}</span>
+            </div>
+          </div>
+
+          <!-- Card Body Preview Items -->
+          <div class="order-card-body">
+            <div class="items-preview">
+              @for (item of order.orderItems.slice(0, 3); track item.orderItemId) {
+                <div class="item-preview-row">
+                  <img [src]="item.productImageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=60'" [alt]="item.productName" />
+                  <div class="item-info">
+                    <span class="name">{{ item.productName }}</span>
+                    <span class="qty">Qty: {{ item.quantity }}</span>
+                  </div>
+                </div>
+              }
+              @if (order.orderItems.length > 3) {
+                <p class="more-items-text">+ {{ order.orderItems.length - 3 }} more item(s) in this order</p>
+              }
+            </div>
+
+            <!-- View detail button -->
+            <div class="card-action">
+              <a [routerLink]="['/orders', order.orderId]" class="btn-view-detail">View Order Details</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

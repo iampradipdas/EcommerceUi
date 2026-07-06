@@ -1,0 +1,261 @@
+.checkout-page {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.page-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 1rem;
+}
+
+/* Layout */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.checkout-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.form-section-box h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 0.75rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+@media (max-width: 500px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: #ffffff;
+  transition: all 0.15s ease;
+  color: #1f2937;
+}
+
+.form-group input:focus {
+  border-color: #4338ca;
+  box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15);
+}
+
+.error-msg {
+  color: #ef4444;
+  font-size: 0.775rem;
+  font-weight: 500;
+}
+
+.btn-place-order {
+  background: #4338ca;
+  color: #ffffff;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(67, 56, 202, 0.2);
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-place-order:hover:not([disabled]) {
+  background: #3730a3;
+  box-shadow: 0 6px 14px rgba(67, 56, 202, 0.3);
+  transform: translateY(-0.5px);
+}
+
+.btn-place-order:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Sidebar Order Summary Details */
+.summary-sidebar {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.summary-sidebar h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+}
+
+.cart-items-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  padding-right: 0.25rem;
+}
+
+.preview-item {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.preview-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 6px;
+}
+
+.preview-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.preview-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.preview-qty-price {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.preview-subtotal {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.summary-sidebar .divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 1.25rem 0;
+}
+
+.summary-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.free-shipping {
+  color: #059669;
+  font-weight: 700;
+}
+
+.total-row {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.btn-back-cart {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  font-size: 0.9rem;
+}
+
+.btn-back-cart:hover {
+  background: #ffffff;
+  border-color: #9ca3af;
+  color: #111827;
+}

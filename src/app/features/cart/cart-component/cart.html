@@ -1,0 +1,87 @@
+<div class="cart-page">
+  <h1 class="page-title">Shopping Cart</h1>
+
+  @if (cartService.totalItems() === 0) {
+    <div class="empty-cart-container">
+      <span class="empty-icon">🛍️</span>
+      <h3>Your cart is empty</h3>
+      <p>Before you check out, you must add some products to your shopping cart.</p>
+      <a routerLink="/products" class="btn-shop-now">Shop Products Now</a>
+    </div>
+  } @else {
+    <div class="cart-layout">
+      <!-- Cart Items Section -->
+      <div class="cart-items-section">
+        <div class="section-header">
+          <span>Items ({{ cartService.totalItems() }})</span>
+          <button (click)="clearCart()" class="btn-clear-cart">Clear Cart</button>
+        </div>
+
+        <div class="items-list">
+          @for (item of cartService.items(); track item.cartItemId) {
+            <div class="cart-item-row">
+              <img [src]="item.imageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=150'" [alt]="item.name" class="item-img" />
+              
+              <div class="item-details">
+                <a [routerLink]="['/products', item.productId]" class="item-name">{{ item.name }}</a>
+                <span class="item-unit-price">{{ item.price | currencyInr }} each</span>
+              </div>
+
+              <!-- Quantity selector -->
+              <div class="qty-control-wrapper">
+                <div class="qty-selector">
+                  <button (click)="decrementQty(item.productId, item.quantity)" class="qty-btn">-</button>
+                  <span class="qty-num">{{ item.quantity }}</span>
+                  <button (click)="incrementQty(item.productId, item.quantity)" [disabled]="item.quantity >= item.stock" class="qty-btn">+</button>
+                </div>
+                @if (item.stock < 5 && item.stock > 0) {
+                  <span class="stock-warn">Only {{ item.stock }} left</span>
+                }
+              </div>
+
+              <div class="item-total-price">
+                {{ (item.price * item.quantity) | currencyInr }}
+              </div>
+
+              <button (click)="removeItem(item.productId)" class="btn-remove-item" title="Remove item">
+                🗑️
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="summary-sidebar">
+        <h3>Order Summary</h3>
+
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>{{ cartService.totalPrice() | currencyInr }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span class="free-shipping">FREE</span>
+          </div>
+          <div class="divider"></div>
+          <div class="summary-row total-row">
+            <span>Total</span>
+            <span>{{ cartService.totalPrice() | currencyInr }}</span>
+          </div>
+        </div>
+
+        @if (auth.isLoggedIn()) {
+          <a routerLink="/checkout" class="btn-checkout">Proceed to Checkout</a>
+        } @else {
+          <div class="guest-prompt">
+            <a routerLink="/auth/login" [queryParams]="{ returnUrl: '/checkout' }" class="btn-login-checkout">Login to Checkout</a>
+            <p class="guest-note">You must log in to submit your order shipping and payment details.</p>
+          </div>
+        }
+        
+        <a routerLink="/products" class="btn-continue-shopping">Continue Shopping</a>
+      </div>
+    </div>
+  }
+</div>

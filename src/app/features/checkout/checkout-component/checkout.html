@@ -1,0 +1,146 @@
+<div class="checkout-page">
+  <h1 class="page-title">Checkout</h1>
+
+  <div class="checkout-layout">
+    <!-- Checkout Forms -->
+    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()" class="checkout-form-section">
+      
+      <!-- Shipping Address (Nested FormGroup) -->
+      <div class="form-section-box" formGroupName="shippingAddress">
+        <h3>Shipping Address</h3>
+        
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" type="text" formControlName="fullName" placeholder="John Doe" />
+            @if (shippingGroup.get('fullName')?.touched && shippingGroup.get('fullName')?.invalid) {
+              <span class="error-msg">Full name is required (min 2 characters).</span>
+            }
+          </div>
+
+          <div class="form-group full-width">
+            <label for="addressLine">Street Address</label>
+            <input id="addressLine" type="text" formControlName="addressLine" placeholder="123 Main St, Apartment 4B" />
+            @if (shippingGroup.get('addressLine')?.touched && shippingGroup.get('addressLine')?.invalid) {
+              <span class="error-msg">Street address is required.</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="city">City</label>
+            <input id="city" type="text" formControlName="city" placeholder="Mumbai" />
+            @if (shippingGroup.get('city')?.touched && shippingGroup.get('city')?.invalid) {
+              <span class="error-msg">City is required.</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="postalCode">Postal Code (PIN)</label>
+            <input id="postalCode" type="text" formControlName="postalCode" placeholder="400001" />
+            @if (shippingGroup.get('postalCode')?.touched && shippingGroup.get('postalCode')?.invalid) {
+              <span class="error-msg">Valid 6-digit postal code is required.</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Information (Nested FormGroup) -->
+      <div class="form-section-box" formGroupName="paymentInfo">
+        <h3>Payment Information</h3>
+        
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="cardName">Name on Card</label>
+            <input id="cardName" type="text" formControlName="cardName" placeholder="John Doe" />
+            @if (paymentGroup.get('cardName')?.touched && paymentGroup.get('cardName')?.invalid) {
+              <span class="error-msg">Name on card is required.</span>
+            }
+          </div>
+
+          <div class="form-group full-width">
+            <label for="cardNumber">Card Number</label>
+            <input id="cardNumber" type="text" formControlName="cardNumber" placeholder="4111 1111 1111 1111" />
+            @if (paymentGroup.get('cardNumber')?.touched) {
+              @if (paymentGroup.get('cardNumber')?.errors?.['required']) {
+                <span class="error-msg">Card number is required.</span>
+              } @else if (paymentGroup.get('cardNumber')?.errors?.['invalidCardFormat']) {
+                <span class="error-msg">Must be a valid 13-19 digit card number.</span>
+              } @else if (paymentGroup.get('cardNumber')?.errors?.['luhnFailed']) {
+                <span class="error-msg">Card number failed Luhn validation checksum check.</span>
+              }
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="expiryDate">Expiration Date (MM/YY)</label>
+            <input id="expiryDate" type="text" formControlName="expiryDate" placeholder="12/28" />
+            @if (paymentGroup.get('expiryDate')?.touched) {
+              @if (paymentGroup.get('expiryDate')?.errors?.['required']) {
+                <span class="error-msg">Expiration date is required.</span>
+              } @else if (paymentGroup.get('expiryDate')?.errors?.['invalidExpiryFormat']) {
+                <span class="error-msg">Use MM/YY format.</span>
+              } @else if (paymentGroup.get('expiryDate')?.errors?.['cardExpired']) {
+                <span class="error-msg">Card has already expired.</span>
+              }
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="cvv">CVV</label>
+            <input id="cvv" type="password" formControlName="cvv" placeholder="***" maxLength="3" />
+            @if (paymentGroup.get('cvv')?.touched && paymentGroup.get('cvv')?.invalid) {
+              <span class="error-msg">3-digit CVV code is required.</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="checkoutForm.invalid || isSubmitting() || cartService.totalItems() === 0"
+        class="btn-place-order"
+      >
+        {{ isSubmitting() ? 'Placing Order...' : 'Confirm & Place Order' }}
+      </button>
+
+    </form>
+
+    <!-- Sidebar Order Preview Summary -->
+    <div class="summary-sidebar">
+      <h3>Items in Order</h3>
+
+      <div class="cart-items-preview">
+        @for (item of cartService.items(); track item.cartItemId) {
+          <div class="preview-item">
+            <img [src]="item.imageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=80'" [alt]="item.name" />
+            <div class="preview-details">
+              <span class="preview-name">{{ item.name }}</span>
+              <span class="preview-qty-price">{{ item.quantity }} x {{ item.price | currencyInr }}</span>
+            </div>
+            <span class="preview-subtotal">{{ (item.price * item.quantity) | currencyInr }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="summary-rows">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>{{ cartService.totalPrice() | currencyInr }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="free-shipping">FREE</span>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span>{{ cartService.totalPrice() | currencyInr }}</span>
+        </div>
+      </div>
+
+      <a routerLink="/cart" class="btn-back-cart">Edit Shopping Cart</a>
+    </div>
+  </div>
+</div>

@@ -22,29 +22,28 @@ export const routes: Routes = [
       import('./features/products/products.routes').then(m => m.PRODUCT_ROUTES)
   },
 
-  // Cart — any logged-in user
-//   {
-//     path: 'cart',
-//     canActivate: [authGuard],
-//     loadChildren: () =>
-//       import('./features/cart/cart.routes').then(m => m.CART_ROUTES)
-//   },
+  // Cart — public access (stores locally if guest, syncs to DB if logged in)
+  {
+    path: 'cart',
+    loadChildren: () =>
+      import('./features/cart/cart.routes').then(m => m.CART_ROUTES)
+  },
 
-//   // Checkout — logged-in user only
-//   {
-//     path: 'checkout',
-//     canActivate: [authGuard],
-//     loadChildren: () =>
-//       import('./features/checkout/checkout.routes').then(m => m.CHECKOUT_ROUTES)
-//   },
+  // Checkout — logged-in user only
+  {
+    path: 'checkout',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/checkout/checkout.routes').then(m => m.CHECKOUT_ROUTES)
+  },
 
-//   // Orders — logged-in user only
-//   {
-//     path: 'orders',
-//     canActivate: [authGuard],
-//     loadChildren: () =>
-//       import('./features/orders/orders.routes').then(m => m.ORDER_ROUTES)
-//   },
+  // Orders — logged-in user only
+  {
+    path: 'orders',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/orders/orders.routes').then(m => m.ORDER_ROUTES)
+  },
 
   // Admin — Admin role only
   {

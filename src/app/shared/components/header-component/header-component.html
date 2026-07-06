@@ -14,9 +14,12 @@
     <!-- Navigation -->
     <nav class="nav-links">
       <a routerLink="/products" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Products</a>
+      @if (auth.isLoggedIn()) {
+        <a routerLink="/orders" routerLinkActive="active" class="nav-link">Orders</a>
+      }
       
       <!-- Cart Icon -->
-      <a routerLink="/products" class="cart-btn">
+      <a routerLink="/cart" class="cart-btn">
         <span class="cart-icon">🛍️</span>
         @if (auth.cartCount() > 0) {
           <span class="cart-badge">{{ auth.cartCount() }}</span>
