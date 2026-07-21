@@ -84,8 +84,6 @@ testem.log
 # --------------------------
 # Environment / Secrets
 # --------------------------
-src/environments/environment.prod.ts
-src/environments/environment.staging.ts
 .env
 .env.*
 !.env.example
