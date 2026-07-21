@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7095/api'
+  apiUrl: 'https://ecommerce-api-zrsl.onrender.com/api'
 };
