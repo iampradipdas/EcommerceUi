@@ -102,3 +102,8 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 *~
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
