@@ -19,7 +19,6 @@ npm-debug.log
 npm-debug.log.*
 yarn-error.log
 yarn-error.log.*
-package-lock.json
 # Uncomment the line below if you use Yarn:
 # yarn.lock
 .pnp
