@@ -2,5 +2,5 @@ name = "ecommerce-ui"
 compatibility_date = "2026-07-01"
 
 [assets]
-directory = "./dist/ecommerce-ui/browser"
+directory = "./dist/EcommerceUi/browser"
 not_found_handling = "single-page-application"
